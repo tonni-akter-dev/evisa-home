@@ -5,7 +5,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface VisaData {
   _id: string;
@@ -33,10 +33,11 @@ export default function VisaCheckPage() {
   const [showResult, setShowResult] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Generate random CAPTCHA code
+  // Generate random CAPTCHA code - UPPERCASE ONLY
   const generateCaptchaCode = () => {
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz0123456789";
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
     let code = "";
     for (let i = 0; i < 6; i++) {
       code += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -46,9 +47,7 @@ export default function VisaCheckPage() {
 
   // Draw CAPTCHA on canvas
   const drawCaptcha = () => {
-    const canvas = document.getElementById(
-      "captchaCanvas",
-    ) as HTMLCanvasElement;
+    const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
@@ -72,7 +71,7 @@ export default function VisaCheckPage() {
       ctx.stroke();
     }
 
-    // Draw text
+    // Draw text - all uppercase
     ctx.font = "bold 28px monospace";
     for (let i = 0; i < newCode.length; i++) {
       ctx.fillStyle = `hsl(${Math.random() * 360}, 70%, 45%)`;
@@ -109,8 +108,8 @@ export default function VisaCheckPage() {
       return;
     }
 
-    // Validate CAPTCHA
-    if (captcha !== captchaCode) {
+    // Validate CAPTCHA - Case insensitive comparison
+    if (captcha.trim().toUpperCase() !== captchaCode.toUpperCase()) {
       setError("Verification code is invalid");
       refreshCaptcha();
       setLoading(false);
@@ -135,13 +134,14 @@ export default function VisaCheckPage() {
       if (!response.ok) {
         // Handle 404 or other errors
         if (response.status === 404) {
-          setError(`Viza cu numărul ${visaNumber} nu există!`);
+          setError(`Visa number is invalid ${visaNumber}`);
         } else {
           setError(data.message || "An error occurred while checking the visa");
         }
         refreshCaptcha();
         setShowResult(false);
         setResult(null);
+        setLoading(false);
         return;
       }
 
@@ -151,7 +151,7 @@ export default function VisaCheckPage() {
         setShowResult(true);
         setError("");
       } else {
-        setError("Visa not found");
+        setError(`Visa number is invalid ${visaNumber}`);
         refreshCaptcha();
       }
     } catch (err) {
@@ -166,18 +166,35 @@ export default function VisaCheckPage() {
   };
 
   const resetSearch = () => {
+    // Clear all state variables
     setVisaNumber("");
     setCaptcha("");
     setResult(null);
     setShowResult(false);
     setError("");
-    drawCaptcha();
+    
+    // Use setTimeout to ensure the canvas is visible and ready
+    setTimeout(() => {
+      drawCaptcha();
+    }, 100);
   };
 
   // Initialize CAPTCHA on component mount
   useEffect(() => {
-    drawCaptcha();
+    // Small delay to ensure canvas is rendered
+    setTimeout(() => {
+      drawCaptcha();
+    }, 100);
   }, []);
+
+  // Redraw CAPTCHA when showResult changes (when returning to form)
+  useEffect(() => {
+    if (!showResult) {
+      setTimeout(() => {
+        drawCaptcha();
+      }, 100);
+    }
+  }, [showResult]);
 
   return (
     <div id="body-wrapper" className="inner">
@@ -197,18 +214,24 @@ export default function VisaCheckPage() {
           {error && (
             <div
               style={{
-                color: error.includes("nu există") ? "#cc0000" : "#ff0000",
+                color: error.includes("invalid") ? "#cc0000" : "#ff0000",
                 fontSize: "20px",
                 fontWeight: "bold",
                 textAlign: "right",
+                marginBottom: "20px",
+                padding: "10px",
+                backgroundColor: "#ffeeee",
+                borderRadius: "5px",
               }}
             >
               {error === "Verification code is invalid" ? (
-                <span>Verification code is invalid</span>
-              ) : error.includes("nu există") ? (
-                <span>{error}</span>
+                <span>✗ Verification code is invalid</span>
+              ) : error.includes("Visa number is invalid") ? (
+                <span>✗ {error}</span>
+              ) : error.includes("Network error") ? (
+                <span>✗ {error}</span>
               ) : (
-                <span>{error}</span>
+                <span>✗ {error}</span>
               )}
             </div>
           )}
@@ -224,8 +247,7 @@ export default function VisaCheckPage() {
                     type="text"
                     value={visaNumber}
                     onChange={(e) => setVisaNumber(e.target.value)}
-                    className="border p-2 w-72.75"
-                    placeholder="Enter visa number"
+                    className="border w-72.75"
                     disabled={loading}
                   />
                 </div>
@@ -233,6 +255,7 @@ export default function VisaCheckPage() {
                 {/* CAPTCHA */}
                 <div className="app-content-data">
                   <canvas
+                    ref={canvasRef}
                     id="captchaCanvas"
                     width="180"
                     height="50"
@@ -254,14 +277,13 @@ export default function VisaCheckPage() {
                       marginBottom: "8px",
                     }}
                   >
-                    Refresh Verification code
+                    Refresh
                   </div>
                   <input
                     type="text"
-                    placeholder="Verification code"
                     value={captcha}
                     onChange={(e) => setCaptcha(e.target.value)}
-                    className="border p-2  w-72.75"
+                    className="border w-72.75"
                     disabled={loading}
                   />
                 </div>
@@ -318,7 +340,7 @@ export default function VisaCheckPage() {
                       <strong>{result.citizenship || "N/A"}</strong>
                     </div>
                     <div>
-                      Passport number:{" "}
+                      Passport number:
                       <strong>
                         {result.passportNumber || result.passport || "N/A"}
                       </strong>
@@ -354,7 +376,7 @@ export default function VisaCheckPage() {
                 <div className="px-4">
                   <button
                     onClick={resetSearch}
-                    className="bg-gray-700  text-white px-4 py-2"
+                    className="bg-gray-700 text-white px-4 py-2"
                   >
                     Another search
                   </button>
