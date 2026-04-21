@@ -1,4 +1,7 @@
 @import "tailwindcss";
+* {
+  box-sizing: border-box;
+}
 
 body {
   line-height: 1;
@@ -42,7 +45,7 @@ body {
     Helvetica,
     sans-serif;
   position: relative;
-  width: 960px;
+  width: 100%;
   margin: 0 auto;
 }
 
