@@ -170,7 +170,7 @@ export default function VisaCheckPage() {
     setResult(null);
     setShowResult(false);
     setError("");
-    
+
     // Use setTimeout to ensure the canvas is visible and ready
     setTimeout(() => {
       drawCaptcha();
@@ -223,13 +223,13 @@ export default function VisaCheckPage() {
               }}
             >
               {error === "Verification code is invalid" ? (
-                <span>✗ Verification code is invalid</span>
+                <span> Verification code is invalid</span>
               ) : error.includes("Visa number is invalid") ? (
-                <span>✗ {error}</span>
+                <span> {error}</span>
               ) : error.includes("Network error") ? (
-                <span>✗ {error}</span>
+                <span> {error}</span>
               ) : (
-                <span>✗ {error}</span>
+                <span> {error}</span>
               )}
             </div>
           )}
@@ -330,7 +330,9 @@ export default function VisaCheckPage() {
                     <div>
                       Date of birth:{" "}
                       <strong>
-                        {result.dateOfBirth || result.dob || "N/A"}
+                        {result.dateOfBirth
+                          ? new Date(result.dateOfBirth).toLocaleDateString()
+                          : "N/A"}
                       </strong>
                     </div>
                     <div>
