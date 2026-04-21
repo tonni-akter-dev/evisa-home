@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import evisa from '../../public/eVisa.png'
 
 const Header = () => {
   return (
@@ -14,8 +15,8 @@ const Header = () => {
       </div>
 
       <div id="header-right">
-        <span>
-          <Image src="/evisa.png" width={187} height={79} alt="eVisa" />
+        <span className="mb-2">
+          <Image src={evisa} width={187} height={79} alt="eVisa" />
         </span>
 
         <div className="languages">
