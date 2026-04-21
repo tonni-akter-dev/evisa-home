@@ -562,13 +562,11 @@ select:blur {
 .meniu-app-inexistent {
   background-color: gray !important;
 }
-.meniu-app-nou {
-}
+
 .meniu-app-completat {
   background: url("https://www.evisa.gov.md/tick.png") no-repeat scroll 1% 50%;
 }
-.meniu-app-valid {
-}
+
 .meniu-app-invalid {
   background-color: gray !important;
 }
