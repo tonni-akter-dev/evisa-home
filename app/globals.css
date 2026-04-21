@@ -1,7 +1,4 @@
 @import "tailwindcss";
-* {
-  box-sizing: border-box;
-}
 
 body {
   line-height: 1;
@@ -48,7 +45,6 @@ body {
   width: 960px;
   margin: 0 auto;
 }
-
 #header-wrapper {
   overflow: hidden;
   background: url("https://www.evisa.gov.md/Images/head-backgr.png") no-repeat
@@ -2029,13 +2025,4 @@ button.ui-button::-moz-focus-inner {
   -khtml-border-radius: 8px;
   -webkit-border-radius: 8px;
   border-radius: 8px;
-}
-/* This will scale down the entire page on mobile */
-@media (max-width: 960px) {
-  body {
-    width: 100%;
-    zoom: 0.75; /* Chrome/Safari */
-    -moz-transform: scale(0.75); /* Firefox */
-    -moz-transform-origin: top center;
-  }
 }
