@@ -2030,3 +2030,12 @@ button.ui-button::-moz-focus-inner {
   -webkit-border-radius: 8px;
   border-radius: 8px;
 }
+/* This will scale down the entire page on mobile */
+@media (max-width: 960px) {
+  body {
+    width: 100%;
+    zoom: 0.75; /* Chrome/Safari */
+    -moz-transform: scale(0.75); /* Firefox */
+    -moz-transform-origin: top center;
+  }
+}
