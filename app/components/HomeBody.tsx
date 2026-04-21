@@ -91,9 +91,12 @@ const HomeBody = () => {
           <br />
 
           <strong>Alert us: </strong>
-          <a href="mailto:check-visa@evisa-gov-md.net">
+          <Link
+            className="text-[#551a8b]"
+            href="mailto:check-visa@evisa-gov-md.net"
+          >
             check-visa@evisa-gov-md.net
-          </a>
+          </Link>
         </div>
       </div>
     </div>

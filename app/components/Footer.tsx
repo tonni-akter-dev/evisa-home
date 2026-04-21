@@ -11,7 +11,9 @@ const Footer = () => {
             <strong>Email:</strong>
           </td>
           <td>
-            <a href="mailto:check-visa@evisa-gov-md.net">check-visa@evisa-gov-md.net</a>
+            <a href="mailto:check-visa@evisa-gov-md.net" className="text-[#0000ee] underline">
+              check-visa@evisa-gov-md.net
+            </a>
           </td>
         </tr>
       </table>
