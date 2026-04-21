@@ -6,7 +6,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import {  useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface VisaData {
   _id: string;
@@ -25,7 +25,15 @@ interface VisaData {
   updatedAt: string;
   [key: string]: any;
 }
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
 
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
 export default function VisaCheckPage() {
   const [visaNumber, setVisaNumber] = useState("");
   const [captcha, setCaptcha] = useState("");
@@ -168,7 +176,7 @@ export default function VisaCheckPage() {
     }
 
     // Validate CAPTCHA - Case insensitive comparison
-    if (captcha.trim().toUpperCase() !== captchaCode.toUpperCase()) {
+    if (captcha.trim() !== captchaCode) {
       setError("Verification code is invalid");
       refreshCaptcha();
       setLoading(false);
@@ -427,16 +435,18 @@ export default function VisaCheckPage() {
                       Date of birth:{" "}
                       <strong>
                         {result.dateOfBirth
-                          ? new Date(result.dateOfBirth).toLocaleDateString()
+                          ? formatDate(result.dateOfBirth)
                           : "N/A"}
                       </strong>
                     </div>
                     <div>
                       Citizenship:{" "}
-                      <strong>{result.citizenship || "N/A"}</strong>
+                      <strong className="uppercase">
+                        {result.citizenship || "N/A"}
+                      </strong>
                     </div>
                     <div>
-                      Passport number:
+                      Passport number:{" "}
                       <strong>
                         {result.passportNumber || result.passport || "N/A"}
                       </strong>
@@ -452,9 +462,7 @@ export default function VisaCheckPage() {
                   <div>
                     Visa validity:{" "}
                     <strong>
-                      {result.validity
-                        ? new Date(result.validity).toLocaleDateString()
-                        : "N/A"}
+                      {result.validity ? formatDate(result.validity) : "N/A"}
                     </strong>
                   </div>
                   <div>

@@ -133,7 +133,7 @@ export default function EVisaTable() {
                     : "-"}
                 </td>
 
-                <td className="px-4 py-3 whitespace-nowrap">
+                <td className="px-4 py-3 whitespace-nowrap uppercase">
                   {visa.citizenship}
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">

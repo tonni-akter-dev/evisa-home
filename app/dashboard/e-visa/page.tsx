@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { useRouter } from "next/navigation";
@@ -37,7 +38,11 @@ const AddEVisa = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        setCountries(Object.values(data));
+        const sortedCountries = Object.values(data).sort((a: any, b: any) =>
+          a.name.localeCompare(b.name),
+        );
+
+        setCountries(sortedCountries as Country[]);
       });
   }, []);
 
@@ -192,7 +197,7 @@ const AddEVisa = () => {
                 name="citizenship"
                 value={formData.citizenship}
                 onChange={handleChange}
-                className={inputClass}
+                className={`${inputClass} uppercase`}
                 required
               >
                 <option value="">Select Country</option>
