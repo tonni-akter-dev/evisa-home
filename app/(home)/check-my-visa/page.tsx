@@ -43,7 +43,6 @@ export default function VisaCheckPage() {
     return code;
   };
 
-  // Draw CAPTCHA on canvas
   const drawCaptcha = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -53,38 +52,96 @@ export default function VisaCheckPage() {
     const newCode = generateCaptchaCode();
     setCaptchaCode(newCode);
 
-    // Clear canvas
+    // Set canvas dimensions
+    canvas.width = 220;
+    canvas.height = 70;
+
+    // Clear canvas to transparent
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Background
-    ctx.fillStyle = "#f5f5f5";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Draw 1px border
+    ctx.strokeStyle = "#999999";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
-    // Draw noise lines
+    // Draw subtle background pattern (very light)
+    ctx.fillStyle = "rgba(240, 245, 250, 0.3)";
+    ctx.fillRect(1, 1, canvas.width - 2, canvas.height - 2);
+
+    // Draw wavy lines (noise)
+    for (let i = 0; i < 4; i++) {
+      ctx.beginPath();
+      ctx.moveTo(0, 15 + i * 15);
+      for (let x = 0; x < canvas.width; x += 15) {
+        const y = 15 + i * 15 + Math.sin(x * 0.12 + i) * 7;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(canvas.width, 15 + i * 15);
+      ctx.strokeStyle = `rgba(120, 120, 140, 0.25)`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    }
+
+    // Draw scattered dots
+    for (let i = 0; i < 100; i++) {
+      ctx.fillStyle = `rgba(0, 0, 0, ${Math.random() * 0.2})`;
+      ctx.fillRect(
+        Math.random() * canvas.width,
+        Math.random() * canvas.height,
+        1.5,
+        1.5,
+      );
+    }
+
+    // Draw random small circles
+    for (let i = 0; i < 15; i++) {
+      ctx.beginPath();
+      ctx.arc(
+        Math.random() * canvas.width,
+        Math.random() * canvas.height,
+        Math.random() * 2 + 1,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fillStyle = `rgba(100, 100, 130, 0.2)`;
+      ctx.fill();
+    }
+
+    // Draw CROOKED text - each character with random rotation and offset
+    const chars = newCode.split("");
+    const startX = 18;
+    const startY = 48;
+    const textColor = "#2a4a7a"; // Dark blue color
+
+    for (let i = 0; i < chars.length; i++) {
+      const char = chars[i];
+      // Random offsets for crooked look
+      const xOffset = (Math.random() - 0.5) * 8;
+      const yOffset = (Math.random() - 0.5) * 6;
+      const x = startX + i * 30 + xOffset;
+      const y = startY + yOffset;
+      // Random rotation between -0.4 and 0.4 radians (crooked)
+      const rotation = (Math.random() - 0.5) * 0.8;
+      // Random font size between 32 and 40
+      const fontSize = 34 + Math.floor(Math.random() * 8);
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rotation);
+      ctx.font = `bold ${fontSize}px "Courier New", "Monaco", monospace`;
+      ctx.fillStyle = textColor;
+      ctx.fillText(char, 0, 0);
+      ctx.restore();
+    }
+
+    // Add some random lines crossing the text (noise)
     for (let i = 0; i < 8; i++) {
       ctx.beginPath();
       ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
       ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-      ctx.strokeStyle = `rgba(0,0,0,${Math.random() * 0.3})`;
+      ctx.strokeStyle = `rgba(80, 100, 120, 0.3)`;
+      ctx.lineWidth = 0.6;
       ctx.stroke();
-    }
-
-    // Draw text - all uppercase
-    ctx.font = "bold 28px monospace";
-    for (let i = 0; i < newCode.length; i++) {
-      ctx.fillStyle = `hsl(${Math.random() * 360}, 70%, 45%)`;
-      ctx.fillText(newCode[i], 15 + i * 28, 38);
-    }
-
-    // Draw dots
-    for (let i = 0; i < 100; i++) {
-      ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.4})`;
-      ctx.fillRect(
-        Math.random() * canvas.width,
-        Math.random() * canvas.height,
-        2,
-        2,
-      );
     }
   };
 
@@ -258,7 +315,8 @@ export default function VisaCheckPage() {
                     width="180"
                     height="50"
                     style={{
-                      border: "1px solid #ccc",
+                      // border: "1px solid #ccc",
+                      // backgroundColor: "rgb(239, 246, 255)",#eff6ff
                       display: "block",
                       marginBottom: "5px",
                       cursor: "pointer",
