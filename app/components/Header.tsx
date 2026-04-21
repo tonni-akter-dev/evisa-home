@@ -1,12 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import evisa from '../../public/eVisa.png'
+import evisa from "../../public/eVisa.png";
+import logo from "../../public/logo.gif";
 
 const Header = () => {
   return (
     <div id="header-wrapper">
       <div id="header-emblem">
         <Link id="header-title" href="#">
+          <Image  src={logo} alt="" />
           <span>
             MINISTRY OF FOREIGN AFFAIRS AND EUROPEAN INTEGRATION OF THE REPUBLIC
             OF MOLDOVA

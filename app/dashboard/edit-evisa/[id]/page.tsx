@@ -35,18 +35,31 @@ const EditEVisa = () => {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
 
-  // ✅ Fetch countries
   useEffect(() => {
-    fetch(
-      "https://raw.githubusercontent.com/iamspruce/search-filter-painate-reactjs/main/data/countries.json",
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        const values: Country[] = Object.values(data);
-        setCountries(values.sort((a, b) => a.name.localeCompare(b.name)));
-      });
-  }, []);
+    const fetchCountries = async () => {
+      try {
+        const res = await fetch(
+          "https://raw.githubusercontent.com/iamspruce/search-filter-painate-reactjs/main/data/countries.json",
+        );
 
+        if (!res.ok) throw new Error("Failed to fetch countries");
+
+        const data = await res.json();
+
+        const values = Object.values(data) as Country[];
+
+        const sorted = values.sort((a, b) =>
+          a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+        );
+
+        setCountries(sorted);
+      } catch (error) {
+        console.error("Error loading countries:", error);
+      }
+    };
+
+    fetchCountries();
+  }, []);
   // ✅ Fetch existing EVisa
   useEffect(() => {
     if (!id) return;
@@ -196,7 +209,7 @@ const EditEVisa = () => {
                 name="citizenship"
                 value={formData.citizenship}
                 onChange={handleChange}
-                className={inputClass}
+                className={`${inputClass} uppercase`}
               >
                 <option value="">Select Country</option>
                 {countries.map((c) => (

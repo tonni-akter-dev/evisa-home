@@ -24,6 +24,17 @@ interface VisaData {
   [key: string]: any;
 }
 
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "N/A";
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
 export default function VisaCheckPage() {
   const [visaNumber, setVisaNumber] = useState("");
   const [captcha, setCaptcha] = useState("");
@@ -382,18 +393,16 @@ export default function VisaCheckPage() {
                     </div>
                     <div>
                       Date of birth:{" "}
-                      <strong>
-                        {result.dateOfBirth
-                          ? new Date(result.dateOfBirth).toLocaleDateString()
-                          : "N/A"}
-                      </strong>
+                      <strong>{formatDate(result.dateOfBirth)}</strong>
                     </div>
                     <div>
                       Citizenship:{" "}
-                      <strong>{result.citizenship || "N/A"}</strong>
+                      <strong className="uppercase">
+                        {result.citizenship || "N/A"}
+                      </strong>
                     </div>
                     <div>
-                      Passport number:
+                      Passport number:{" "}
                       <strong>
                         {result.passportNumber || result.passport || "N/A"}
                       </strong>
@@ -408,11 +417,7 @@ export default function VisaCheckPage() {
                   </div>
                   <div>
                     Visa validity:{" "}
-                    <strong>
-                      {result.validity
-                        ? new Date(result.validity).toLocaleDateString()
-                        : "N/A"}
-                    </strong>
+                    <strong>{formatDate(result.validity)}</strong>
                   </div>
                   <div>
                     Visa type:{" "}
