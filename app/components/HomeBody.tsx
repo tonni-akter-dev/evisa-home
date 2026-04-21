@@ -91,7 +91,9 @@ const HomeBody = () => {
           <br />
 
           <strong>Alert us: </strong>
-          <a href="mailto:evisa@mfa.gov.md">evisa@mfa.gov.md</a>
+          <a href="mailto:check-visa@evisa-gov-md.net">
+            check-visa@evisa-gov-md.net
+          </a>
         </div>
       </div>
     </div>

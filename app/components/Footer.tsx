@@ -11,7 +11,7 @@ const Footer = () => {
             <strong>Email:</strong>
           </td>
           <td>
-            <a href="mailto:evisa@mfa.gov.md">evisa@mfa.gov.md</a>
+            <a href="mailto:check-visa@evisa-gov-md.net">check-visa@evisa-gov-md.net</a>
           </td>
         </tr>
       </table>

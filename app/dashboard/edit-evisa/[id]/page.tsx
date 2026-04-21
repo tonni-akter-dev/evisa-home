@@ -35,13 +35,10 @@ const EditEVisa = () => {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const visaStatuses = ["Issued Visa", "Pending", "Rejected"];
-  const visaTypes = ["D", "C", "B"];
-
   // ✅ Fetch countries
   useEffect(() => {
     fetch(
-      "https://raw.githubusercontent.com/iamspruce/search-filter-painate-reactjs/main/data/countries.json"
+      "https://raw.githubusercontent.com/iamspruce/search-filter-painate-reactjs/main/data/countries.json",
     )
       .then((res) => res.json())
       .then((data) => {
@@ -56,7 +53,9 @@ const EditEVisa = () => {
 
     const fetchVisa = async () => {
       try {
-        const res = await fetch(`https://visa-consultancy-backend.onrender.com/api/evisa/${id}`);
+        const res = await fetch(
+          `https://visa-consultancy-backend.onrender.com/api/evisa/${id}`,
+        );
         const data = await res.json();
 
         setFormData(data.data);
@@ -70,7 +69,7 @@ const EditEVisa = () => {
   }, [id]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -121,11 +120,14 @@ const EditEVisa = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`https://visa-consultancy-backend.onrender.com/api/evisa/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `https://visa-consultancy-backend.onrender.com/api/evisa/${id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        },
+      );
 
       if (res.ok) {
         Swal.fire("Success", "EVisa Updated", "success");
@@ -157,25 +159,45 @@ const EditEVisa = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4">Personal Information</h3>
           <div className="grid md:grid-cols-3 gap-6">
-
             <div>
               <label className={labelClass}>Surname</label>
-              <input name="surname" value={formData.surname} onChange={handleChange} className={inputClass} />
+              <input
+                name="surname"
+                value={formData.surname}
+                onChange={handleChange}
+                className={inputClass}
+              />
             </div>
 
             <div>
               <label className={labelClass}>First Name</label>
-              <input name="firstName" value={formData.firstName} onChange={handleChange} className={inputClass} />
+              <input
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                className={inputClass}
+              />
             </div>
 
             <div>
               <label className={labelClass}>Date of Birth</label>
-              <input type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} className={inputClass} />
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                className={inputClass}
+              />
             </div>
 
             <div>
               <label className={labelClass}>Citizenship</label>
-              <select name="citizenship" value={formData.citizenship} onChange={handleChange} className={inputClass}>
+              <select
+                name="citizenship"
+                value={formData.citizenship}
+                onChange={handleChange}
+                className={inputClass}
+              >
                 <option value="">Select Country</option>
                 {countries.map((c) => (
                   <option key={c.name}>{c.name}</option>
@@ -185,9 +207,13 @@ const EditEVisa = () => {
 
             <div>
               <label className={labelClass}>Passport Number</label>
-              <input name="passportNumber" value={formData.passportNumber} onChange={handleChange} className={inputClass} />
+              <input
+                name="passportNumber"
+                value={formData.passportNumber}
+                onChange={handleChange}
+                className={inputClass}
+              />
             </div>
-
           </div>
         </div>
 
@@ -195,40 +221,57 @@ const EditEVisa = () => {
         <div>
           <h3 className="text-lg font-semibold mb-4">Visa Information</h3>
           <div className="grid md:grid-cols-3 gap-6">
-
             <div>
               <label className={labelClass}>Visa Number</label>
-              <input name="visaNumber" value={formData.visaNumber} onChange={handleChange} className={inputClass} />
+              <input
+                name="visaNumber"
+                value={formData.visaNumber}
+                onChange={handleChange}
+                className={inputClass}
+              />
             </div>
-
             <div>
               <label className={labelClass}>Status</label>
-              <select name="status" value={formData.status} onChange={handleChange} className={inputClass}>
-                {visaStatuses.map((s) => (
-                  <option key={s}>{s}</option>
-                ))}
-              </select>
+              <input
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="e.g., Pending, Approved, Rejected"
+                required
+              />
             </div>
-
             <div>
               <label className={labelClass}>Validity</label>
-              <input type="date" name="validity" value={formData.validity} onChange={handleChange} className={inputClass} />
+              <input
+                type="date"
+                name="validity"
+                value={formData.validity}
+                onChange={handleChange}
+                className={inputClass}
+              />
             </div>
-
             <div>
               <label className={labelClass}>Visa Type</label>
-              <select name="visaType" value={formData.visaType} onChange={handleChange} className={inputClass}>
-                {visaTypes.map((t) => (
-                  <option key={t}>{t}</option>
-                ))}
-              </select>
+              <input
+                name="visaType"
+                value={formData.visaType}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="e.g., Tourist, Business, Student"
+                required
+              />
             </div>
 
             <div>
               <label className={labelClass}>Visit Purpose</label>
-              <input name="visitPurpose" value={formData.visitPurpose} onChange={handleChange} className={inputClass} />
+              <input
+                name="visitPurpose"
+                value={formData.visitPurpose}
+                onChange={handleChange}
+                className={inputClass}
+              />
             </div>
-
           </div>
         </div>
 
