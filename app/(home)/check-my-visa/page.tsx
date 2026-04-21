@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
@@ -35,7 +34,6 @@ export default function VisaCheckPage() {
   const [loading, setLoading] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Generate random CAPTCHA code - UPPERCASE ONLY
   const generateCaptchaCode = () => {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
     let code = "";
