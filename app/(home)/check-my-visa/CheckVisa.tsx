@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
@@ -5,6 +6,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import {  useSearchParams, useRouter } from "next/navigation";
 
 interface VisaData {
   _id: string;
@@ -33,6 +35,8 @@ export default function VisaCheckPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const generateCaptchaCode = () => {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
@@ -205,6 +209,7 @@ export default function VisaCheckPage() {
         setResult(data.data);
         setShowResult(true);
         setError("");
+        router.push(`/check-my-visa?search=${visaNumber}`);
       } else {
         setError(`Visa number is invalid ${visaNumber}`);
         refreshCaptcha();
@@ -232,7 +237,45 @@ export default function VisaCheckPage() {
       drawCaptcha();
     }, 100);
   };
+  useEffect(() => {
+    const search = searchParams.get("search");
 
+    if (!search) {
+      resetSearch();
+      return;
+    }
+
+    setVisaNumber(search);
+
+    const fetchVisa = async () => {
+      setLoading(true);
+
+      try {
+        const response = await fetch(
+          `https://visa-consultancy-backend.onrender.com/api/evisa/check/${search}`,
+        );
+
+        const data = await response.json();
+
+        if (response.ok && data.success && data.data) {
+          setResult(data.data);
+          setShowResult(true);
+          setError("");
+        } else {
+          setResult(null);
+          setShowResult(false);
+          setError(`Visa number is invalid ${search}`);
+        }
+      } catch (err) {
+        setError("Network error. Please try again.");
+        setShowResult(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVisa();
+  }, [searchParams]);
   useEffect(() => {
     setTimeout(() => {
       drawCaptcha();

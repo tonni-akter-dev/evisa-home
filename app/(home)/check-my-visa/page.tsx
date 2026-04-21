@@ -1,4 +1,4 @@
-import React from "react";
+import { Suspense } from "react";
 
 import type { Metadata } from "next";
 
@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 
 const Check = () => {
   return (
-    <div>
+    <Suspense fallback={<div>Loading...</div>}>
       <VisaCheckPage />
-    </div>
+    </Suspense>
   );
 };
 
